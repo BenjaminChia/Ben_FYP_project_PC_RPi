@@ -5,8 +5,10 @@ import time
 import transcriptReceiver
 from timeServer import TimeServer
 
+
 deviceMan = pimatrix.deviceManager()
 winPerfTimer = TimeServer()
+
 
 def printMenu():
     print "\n"
@@ -23,6 +25,8 @@ def printMenu():
         print "----------------------"
         print "9. Disconnect from all devices"
         print "0. Shutdown all devices"
+    print "7. terminate"
+
 
 while(True):
     printMenu()
@@ -38,14 +42,19 @@ while(True):
         deviceMan.tabulateDevice()
         raw_input("Press Enter to continue...")     
     
+    elif choice == 7:
+        print '=' * 50
+        print '\t\tTerminated'
+        print '=' * 50
+        break
+    
     elif choice == 2:
         deviceMan.tabulateDevice()
         raw_input("Press Enter to continue...")
 
     elif choice == 3:
         digit = chr((int(time.clock())+2)%10+48)
-        deviceMan.sendCommand("rec2sd", digit)
-
+        deviceMan.sendCommand("rec2sd", digit)  
     elif choice == 8:
         deviceMan.sendCommand("stop")
 
@@ -58,10 +67,9 @@ while(True):
             deviceMan.sendCommand("shutdown")
             break
         else:
-            print "Abort"
-    else:
-        print "Not a valid choice"
+            print ("Abort")
+
 
 print "\n\nThank you for using Pi-Matrix Management Console"
 print "Have a nice day!\n"
-winPerfTimer.stop()
+#winPerfTimer.stop()

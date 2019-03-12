@@ -21,6 +21,7 @@ class deviceManager():
         udpSocket=socket(AF_INET, SOCK_DGRAM)
         udpSocket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
         udpSocket.sendto('live long and prosper',('255.255.255.255',8001))
+     
     
         while True:
             try:
@@ -56,8 +57,7 @@ class deviceManager():
                     status = "Idle"
                 elif pimatrix.status == "L":
                     status = "Recording"
-                elif pimatrix.status == "S":
-                    status = "LVCSR"
+
 
                 print str(num)+".\t"+pimatrix.hostname+"\t"+pimatrix.ip+"\t"+status
                 num+=1

@@ -11,8 +11,8 @@ class RecordingStream(threading.Thread):
 
     def run(self):
         printout = "Receiving from "+self.device.hostname+"...\n"
-        print printout
-        filename = "Recordings/"+self.device.hostname+"_"+self.dateAndTime+"_8ch.wav"
+        print (printout)
+        filename = ("Recordings/"+self.device.hostname+"_"+self.dateAndTime+"_8ch.wav")
         out_sound = wave.open(filename, 'wb')
         # (num of channels, sampling width in bytes, sampling rate, num of frames, compression type, compression name)
         out_sound.setparams((8, 2, 16000, 0, 'NONE', 'not compressed'))
@@ -26,7 +26,7 @@ class RecordingStream(threading.Thread):
             file_buffer_length = len(file_buffer)
 
             if file_buffer_length == 0:
-                print self.device.hostname, "connection closed"
+                print (self.device.hostname, "connection closed")
                 break
 
             bytes_received += file_buffer_length
@@ -45,4 +45,4 @@ class RecordingStream(threading.Thread):
 
         printout = self.device.hostname+" streamed for "+str(self.seconds_recorded//60)+" minutes "+str(self.seconds_recorded%60)+" seconds\n"
 
-        print printout
+        print (printout)
