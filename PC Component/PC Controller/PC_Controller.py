@@ -14,26 +14,26 @@ def printMenu():
     print "\n"
     print "\tPC Controller for Matrix RPi\n"
     print "\tDevice connected:", deviceMan.numDevices, "\n"
-    print "\t" + '='*30
+    print "\t" + '=' * 30
     print "\n\t1. Discover devices"
     if deviceMan.numDevices > 0:
         print "\t2. Connected devices' detail"
-        print "\t" + '-'*30
+        print "\t" + '-' * 30
         if not deviceMan.deviceBusy:
             print "\t3. Record to disk"
             print "\t4. Record over network"
         else:
             print "\t5. Stop all devices' current task"
-        print "\t" + '-'*30
+        print "\t" + '-' * 30
         print "\t6. Disconnect from all devices"
         print "\t7. Shutdown all devices"
     print "\t0. Terminate"
-    print "\n\t" + '='*30
+    print "\n\t" + '=' * 30
 
 
 while(True):
     printMenu()
-    rawChoice = raw_input("\n\tChoice: ");
+    rawChoice = raw_input("\n\tChoice: ")
     if len(rawChoice) == 0:
         choice = 1
     else:
@@ -50,7 +50,7 @@ while(True):
         raw_input("\n\tPress Enter to continue...")
 
     elif choice == 3:
-        digit = chr((int(time.clock())+2)%10+48)
+        digit = chr((int(time.clock()) + 2) % 10 + 48)
         deviceMan.sendCommand("rec2sd", digit)  
 
     elif choice == 4:
@@ -62,7 +62,7 @@ while(True):
         for streamer in streamerList:
             streamer.start()
             streamer.continue_recording = True
-        digit = chr((int(time.clock())+2)%10+48)
+        digit = chr((int(time.clock()) + 2) % 10 + 48)
         deviceMan.sendCommand("rec2net", digit)
         raw_input("")
         for streamer in streamerList:
@@ -96,7 +96,7 @@ while(True):
             print ("\n\n\tShutdown Cancelled")
         else:
             print ("\n\tError...\n\n\tIncorrect input")
-            print ("\n\tTry again later")
+            print ("\n\tTry again")
     else:
         print ("\n\tError...\n\n\tIncorrect input")
         print ("\n\tTry Again")

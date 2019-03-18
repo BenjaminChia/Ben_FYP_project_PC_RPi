@@ -17,8 +17,7 @@ class workThread(threading.Thread):
                 rxTimestamp = time.clock()
                 packet = struct.pack("II",
                                      int(rxTimestamp),
-                                     int(math.modf(rxTimestamp)[0]*1000000),
-                                     )
+                                     int(math.modf(rxTimestamp)[0] * 1000000),)
                 self.socket.sendto(packet, addr)
                 #print rxTimestamp
             except socket.error:

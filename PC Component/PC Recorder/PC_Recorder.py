@@ -20,39 +20,32 @@ def int_or_str(text):
         return text
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument(
-    '-l', '--list-devices', action='store_true',
+parser.add_argument('-l', '--list-devices', action='store_true',
     help='show list of audio devices and exit')
-parser.add_argument(
-    '-d', '--device', type=int_or_str,
+parser.add_argument('-d', '--device', type=int_or_str,
     help='input device (numeric ID or substring)')
-parser.add_argument(
-    '-r', '--samplerate', type=int, help='sampling rate')
-parser.add_argument(
-    '-c', '--channels', type=int, default=1, help='number of input channels')
-parser.add_argument(
-    'filename', nargs='?', metavar='FILENAME',
+parser.add_argument('-r', '--samplerate', type=int, help='sampling rate')
+parser.add_argument('-c', '--channels', type=int, default=1, help='number of input channels')
+parser.add_argument('filename', nargs='?', metavar='FILENAME',
     help='audio file to store recording to')
-parser.add_argument(
-    '-t', '--subtype', type=str, help='sound file subtype (e.g. "PCM_24")')
+parser.add_argument('-t', '--subtype', type=str, help='sound file subtype (e.g. "PCM_24")')
 args = parser.parse_args()
 
 
 
 
 def printMenu():
-
-    print('_' * 50)
     print("\n")
-    print ("Welcome to Recorder Management Console")
-    print('_' * 50)
-    print ("\n1. List Devices")
-    print ("\n2. Recorder microphone")
+    print('-' * 30)
+    print("\tPC Recorder")
+    print('-' * 30)
+    print("\n1. List Devices")
+    print("\n2. Record Devices")
     print("\n3. Terminate\n")
-    #print ("3. stop record microphone")
+   
+t = True 
 
-
-while True:
+while t:
     try:
         import sounddevice as sd
         import soundfile as sf
@@ -61,28 +54,30 @@ while True:
         assert numpy  # avoid "imported but unused" message (W0611)
         printMenu()
         rawChoice = input("\nChoice: ")
-        choice = int(rawChoice)
+        choice = (rawChoice)
 
-        if choice == 1:
+        if choice == '1':
+            print("\n")
             print(sd.query_devices())
-            input("\nEnter to continue")
-        if choice == 2:
+            input("\n\tEnter to continue......")
+        elif choice == '2':
             try:
                 if args.samplerate is None:
                     device_info = sd.query_devices(args.device, 'input')
                     # soundfile expects an int, sounddevice provides a float:
                     args.samplerate = 16000 #int(device_info['default_samplerate'])
-
-                rawnumdevice = input("Num of devices: ")
+                
+                print("\n\n(Up to 3 devices)")
+                rawnumdevice = input("Num of devices :")
                 numdevice = int(rawnumdevice)
                 chosendevice = [None] * numdevice
                 filename = [None] * numdevice
                 for i in range(numdevice):
-                    print("Device ", i+1)
-                    rawchosendevice = input("choose your device: ")
+                    print("Device ", i + 1)
+                    rawchosendevice = input("\nChoose your device: ")
                     chosendevice[i] = int(rawchosendevice)
                     namef = (sd.query_devices(chosendevice[i], 'input')['name'])
-                    filename[i]= "Local Mic Recordings/" + time.strftime("%d%m%y_%H%M%S") + ' Device'+str(i+1)+'_'+namef+'.wav'
+                    filename[i] = "Local Mic Recordings/" + time.strftime("%d%m%y_%H%M%S") + ' Device' + str(i + 1) + '_' + namef + '.wav'
                 q = queue.Queue()
 
                 def callback(indata, frames, time, status):
@@ -104,7 +99,7 @@ while True:
                             while True:
                                 file.write(q.get())
 
-                if numdevice == 2:
+                elif numdevice == 2:
                     with sf.SoundFile(filename[0], mode='x', samplerate=args.samplerate,
                                       channels=args.channels, subtype=args.subtype) as file:
                         with sf.SoundFile(filename[1], mode='x', samplerate=args.samplerate,
@@ -121,7 +116,7 @@ while True:
                                     while True:
                                         file.write(q.get())
                                         file1.write(q.get())
-                if numdevice == 3:
+                elif numdevice == 3:
                     with sf.SoundFile(filename[0], mode='x', samplerate=args.samplerate,
                                       channels=args.channels, subtype=args.subtype) as file:
                         with sf.SoundFile(filename[1], mode='x', samplerate=args.samplerate,
@@ -143,17 +138,29 @@ while True:
                                                 file.write(q.get())
                                                 file1.write(q.get())
                                                 file2.write(q.get())
+
+                else:
+                    print("\tError... Incorrect Number\n\tPlease Select 1-3 Device")
             except KeyboardInterrupt:
                 for i in range(numdevice):
-                    print("\nDevice ", i+1)
+                    print("\nDevice ", i + 1)
                     print('Recording finished: ' + repr(filename[i]))
 
-        if choice == 3:
+        elif choice == '3':
+            print("\n\n")
             print('=' * 50)
             print('\t\tTerminated')
+            print("\n\n\tThank you for using PC Recorder")
+            print("\tHave a nice day!\n")
             print('=' * 50)
-            break
+            print("\n\n")
+            t = False
+
+        elif choice == "\0":
+            print("")
+        else:   
+            print("\n\tError...\n\n\tIncorrect input")
+            print("\n\tTry Again")
 
     except Exception as e:
         parser.exit(type(e).__name__ + ': ' + str(e))
-

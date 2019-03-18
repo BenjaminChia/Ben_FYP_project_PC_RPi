@@ -48,8 +48,8 @@ void *recorder(void * null);
 void *udpBroadcastReceiver(void *null);
 void *arrivalDirection(void* null);
 
-bool pcConnected = false; 
-bool recording = false; 
+bool pcConnected = false;
+bool recording = false;
 
 char sysInfo[COMMAND_LENGTH + HOST_NAME_LENGTH];
 char commandArgument;
@@ -75,7 +75,7 @@ hal::MatrixIOBus bus;
 hal::MicrophoneArray mics;
 
 int main(int argc, char *agrv[]) {
-	
+
 	gethostname(hostname, HOST_NAME_LENGTH);
 	*status = 'I';
 	google::ParseCommandLineFlags(&argc, &agrv, true);
@@ -107,7 +107,7 @@ int main(int argc, char *agrv[]) {
 	//stand by
 	libsocket::inet_stream_server tcpServer("0.0.0.0", "8000", LIBSOCKET_IPv4);
 	cout << hostname << " - TCP server listening :8000\n";
-	
+
 	//wait for network connection
 	while (true) {
 		try {
@@ -137,7 +137,7 @@ int main(int argc, char *agrv[]) {
 						*status = 'N';
 						tcpConnection->rcv(&commandArgument, 1, MSG_WAITALL);
 						pthread_create(&recorderThread, NULL, recorder, NULL);
-						
+
 					}
 					break;
 				}
@@ -155,23 +155,23 @@ int main(int argc, char *agrv[]) {
 					switch (*status) {
 					case 'I': break;
 					case 'N': {
-						recording = false; 
+						recording = false;
 						pthread_join(recorderThread, NULL);
 						break;
 					}
 					case 'L': {
-						recording = false; 
+						recording = false;
 						pthread_join(recorderThread, NULL);
 						break;
 					}
 					default: cout << "unrecognized command" << endl;
 					}
 
-					*status = 'I'; 
+					*status = 'I';
 					break;
 				}
 				case 'T': {
-					everloop.Write(&turnOff); 
+					everloop.Write(&turnOff);
 					sleep(1);
 					system("sudo openocd -f $HOME/sam3s_halt.cfg");
 					sleep(1);
@@ -263,11 +263,8 @@ void *recorder(void* null) {
 	case 'N':pthread_create(&workerThread, NULL, record2Remote, NULL);  break;
 	case 'L':pthread_create(&workerThread, NULL, record2Disk, NULL);  break;
 	}
-	
-	
-	//cout << "------ Recording starting ------" << endl;
-	pthread_join(workerThread, NULL); 
-	
+
+	pthread_join(workerThread, NULL);
 
 	for (hal::LedValue &led : image1d.leds)
 	{
@@ -275,21 +272,20 @@ void *recorder(void* null) {
 		led.green = 5;
 	}
 	everloop.Write(&image1d);
-	
-	//cout << "------ Recorder ended ------" << endl;
+
 	pthread_exit(NULL);
 
 }
 void *record2Disk(void* null) {
-	
+
 	cout << "------ Local Recording Starting ------" << endl;
 	int sampling_rate = FLAGS_sampling_frequency;
 	mics.Setup(&bus);
 	mics.SetSamplingRate(sampling_rate);
-	
+
 	if (FLAGS_gain > 0) mics.SetGain(FLAGS_gain);
 	hal::MicrophoneCore mic_core(mics);
-	
+
 	mic_core.Setup(&bus);
 	mics.CalculateDelays(0, 0, 1000, 320 * 1000);
 
@@ -303,9 +299,9 @@ void *record2Disk(void* null) {
 	struct tm tm;
 	int seconds = 0;
 	string filename = "mic_" + std::to_string(mics.SamplingRate()) +
-			"_s16le_beamed.raw";
+		"_s16le_beamed.raw";
 	os.open(filename, ofstream::binary);
-	
+
 	time_t t = time(NULL);
 	tm = *localtime(&t);
 
@@ -319,7 +315,6 @@ void *record2Disk(void* null) {
 	uint32_t counter = 0;
 	uint32_t samples = 0;
 	ofstream file(filename1, std::ofstream::binary);
-	
 
 	struct WaveHeader {
 		//RIFF chunk
@@ -347,7 +342,6 @@ void *record2Disk(void* null) {
 
 	do {
 		mics.Read(); /* Reading 8-mics buffer from de FPGA */
-					 //Recorder starts
 		for (uint32_t s = 0; s < mics.NumberOfSamples(); s++) {
 			buffer1[samples] = mics.Beam(s);
 			samples++;
@@ -357,11 +351,10 @@ void *record2Disk(void* null) {
 		if (samples >= mics.SamplingRate()) {
 			file.write((const char*)buffer1, samples * sizeof(int16_t));
 			os.write((const char *)buffer1, samples * sizeof(int16_t));
-			samples = 0; 
+			samples = 0;
 			seconds++;
 			cout << "\t  Recording for " << seconds / 60 << " Minutes and " << seconds % 60 << " Seconds...\n " << endl;
 		}
-		//cout << recording << endl;
 	} while (recording);
 
 	os.close();
@@ -369,9 +362,9 @@ void *record2Disk(void* null) {
 	header.overallSize = header.dataSize + 36;
 	file.seekp(0);
 	file.write((const char*)&header, sizeof(WaveHeader));
-	file.close(); 
+	file.close();
 	cout << "\n------ Local Recording Ended ------" << endl;
-	cout << "Recording "<< hostname << "_" << dateAndTime << "_beamed.wav" << " saved in $HOME/BenRecordings\n\n" << endl;
+	cout << "Recording " << hostname << "_" << dateAndTime << "_beamed.wav" << " saved in $HOME/BenRecordings\n\n" << endl;
 	pthread_exit(NULL);
 
 }
@@ -383,41 +376,36 @@ void *record2Remote(void* null)
 	mics.Setup(&bus);
 	mics.SetSamplingRate(sampling_rate);
 	if (FLAGS_gain > 0) mics.SetGain(FLAGS_gain);
-	//mics.ShowConfiguration();
 	hal::MicrophoneCore mic_core(mics);
 
 	mic_core.Setup(&bus);
 	mics.CalculateDelays(0, 0, 1000, 320 * 1000);
-	int seconds =0;
+	int seconds = 0;
 	cout << "\tRecording to PC " << endl;
 	uint32_t samples = 0;
 	int16_t buffer2[mics.SamplingRate() + mics.NumberOfSamples()];
 	if (pcConnected) {
 		syncRecording(NULL);
 		cout << "Synced to PC" << endl;
-		
+
 	}
-	//cout << "------ Recording starting ------" << endl;
-	
-	//cout << recording << endl;
-	while (recording){
-	
-		try { 
+
+	while (recording) {
+
+		try {
 			mics.Read();
 			for (uint32_t s = 0; s < mics.NumberOfSamples(); s++) {
 				buffer2[samples] = mics.Beam(s);
-				samples++;	
+				samples++;
 			}
 			if (samples >= mics.SamplingRate()) {
 				tcpConnection->snd(buffer2, 32768);
 				samples = 0;
 				seconds++;
-				cout << "\t  Streaming for " << seconds/60 << " Minutes and "  << seconds%60 <<" Seconds...\n " << endl;
+				cout << "\t  Streaming for " << seconds / 60 << " Minutes and " << seconds % 60 << " Seconds...\n " << endl;
 			}
-			//cout << recording << "  recording" << endl;
-			
 		}
-	
+
 		catch (const libsocket::socket_exception& exc)
 		{
 			//network disconnection means recording completed
@@ -427,20 +415,18 @@ void *record2Remote(void* null)
 			break;
 		}
 	}
-	//cout << "\n\tEnding PC Stream" << endl;
 	cout << "\n\n------ Streaming Ended ------\n\n" << endl;
 	pthread_exit(NULL);//terminate itself
 }
 
 void *arrivalDirection(void* null) {
 	//DOA setup
-	//cout << "DOA" << endl;
 	hal::MicrophoneArray micsx;
 	micsx.Setup(&bus);
 	int sampling_rate = FLAGS_sampling_frequency;
 	hal::MicrophoneCore doa_mic_core(micsx);
 	micsx.SetSamplingRate(sampling_rate);
-	if (FLAGS_gain > 0) micsx.SetGain(FLAGS_gain);
+	micsx.SetGain(-1);
 	doa_mic_core.Setup(&bus);
 
 	hal::Everloop everloop;
@@ -451,11 +437,11 @@ void *arrivalDirection(void* null) {
 	doa.Init();
 	int mic;
 
-	while (recording){
+	while (recording) {
 		micsx.Read();
 		doa.Calculate();
 		mic = doa.GetNearestMicrophone();
-		
+
 		for (hal::LedValue &led : image1d.leds)
 		{
 			led.blue = 0;
@@ -470,10 +456,6 @@ void *arrivalDirection(void* null) {
 
 			everloop.Write(&image1d);
 		}//DOA part end
-		
-	} 
-
-
+	}
 	pthread_exit(NULL);
-
 }
