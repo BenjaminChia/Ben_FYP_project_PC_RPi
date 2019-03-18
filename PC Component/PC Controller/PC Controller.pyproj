@@ -34,9 +34,6 @@
     <Compile Include="timeServer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="transcriptReceiver.py">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="{1c5ffe2b-4f76-4274-bf32-0122edad6d0c}\3.5" />

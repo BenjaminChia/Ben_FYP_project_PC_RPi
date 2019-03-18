@@ -50,8 +50,8 @@ class deviceManager():
     def tabulateDevice(self):
         if self.numDevices>0:
             num = 1
-            print "\n#\tHostname\tIP\t\tStatus"
-            print "-\t--------\t--\t\t------"
+            print "\n\t#\tHostname\tIP\t\tStatus"
+            print "\t-\t--------\t--\t\t------"
             for pimatrix in self.deviceList:
                 status = ""
                 if pimatrix.status == "I":
@@ -61,10 +61,10 @@ class deviceManager():
                 elif pimatrix.status == "N":
                     status = "Recording2PC"
 
-                print str(num)+".\t"+pimatrix.hostname+"\t"+pimatrix.ip+"\t"+status
+                print "\t"+str(num)+".\t"+pimatrix.hostname+"\t"+pimatrix.ip+"\t"+status
                 num+=1
         else:
-            print "No devices found"
+            print "\tNo devices found"
         
 
     def sendCommand(self, command, para=''):
@@ -84,7 +84,7 @@ class deviceManager():
                 pimatrix.status = status
 
             except:
-                print "{0}({1}) timed out!".format(pimatrix.hostname,pimatrix.ip)
+                print "\n\t{0}({1}) timed out!".format(pimatrix.hostname,pimatrix.ip)
                 self.deviceList.remove(pimatrix)
                 self.numDevices -= 1
     
@@ -103,6 +103,7 @@ class deviceManager():
                 except:
                     pimatrix.tcpConnection.setblocking(True)
                     break
+   
     def clean32768TcpBuffer(self):
         for pimatrix in self.deviceList:
             pimatrix.tcpConnection.setblocking(False)

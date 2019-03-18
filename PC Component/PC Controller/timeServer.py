@@ -32,7 +32,7 @@ class TimeServer():
         self.workThread = workThread(self.soc)
         time.clock()
 
-        print "Windows Perf Timer :1230"
+        #print "Windows Perf Timer :1230"
         self.workThread.start()
 
     def stop(self):
