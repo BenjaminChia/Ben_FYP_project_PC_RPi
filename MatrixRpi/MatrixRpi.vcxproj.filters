@@ -167,8 +167,5 @@
     <ClInclude Include="matrix\cpp\driver\zwave_gpio.h">
       <Filter>Library\matrix</Filter>
     </ClInclude>
-    <ClInclude Include="main\sharedResources.h">
-      <Filter>main</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
