@@ -362,7 +362,7 @@ void *record2Disk(void* null) {
 			os.write((const char *)buffer1, samples * sizeof(int16_t));
 			samples = 0;
 		}
-		cout << recording << endl;
+		//cout << recording << endl;
 	} while (recording);
 
 	os.close();
