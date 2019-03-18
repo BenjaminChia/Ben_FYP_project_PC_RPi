@@ -82,7 +82,7 @@ while True:
                     rawchosendevice = input("choose your device: ")
                     chosendevice[i] = int(rawchosendevice)
                     namef = (sd.query_devices(chosendevice[i], 'input')['name'])
-                    filename[i]= time.strftime("%d%m%Y_%H%M") + ' Device'+str(i+1)+'_'+namef+'.wav'
+                    filename[i]= "Local Mic Recordings/" + time.strftime("%d%m%y_%H%M%S") + ' Device'+str(i+1)+'_'+namef+'.wav'
                 q = queue.Queue()
 
                 def callback(indata, frames, time, status):
