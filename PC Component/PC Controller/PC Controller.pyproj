@@ -40,7 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="{1c5ffe2b-4f76-4274-bf32-0122edad6d0c}\3.5" />
-    <InterpreterReference Include="{70c8f398-4c6f-43e3-bb70-d39a8bfa8eb8}\2.7" />
     <InterpreterReference Include="{9a7a9026-48c1-4688-9d5d-e5699d47d074}\2.7" />
   </ItemGroup>
   <PropertyGroup>

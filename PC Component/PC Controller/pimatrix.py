@@ -36,6 +36,7 @@ class deviceManager():
             pimatrix.tcpConnection.connect((pimatrix.ip, 8000))
             data = pimatrix.tcpConnection.recv(21)
             
+            #pimatrix.tcpConnection.send(struct.pack("I"))
             pimatrix.tcpConnection.send(struct.pack("I", int(time.time())))
 
             pimatrix.hostname=str(data[1:]).rstrip(" \t\r\n\0")
@@ -56,8 +57,9 @@ class deviceManager():
                 if pimatrix.status == "I":
                     status = "Idle"
                 elif pimatrix.status == "L":
-                    status = "Recording"
-
+                    status = "Recording2SD"
+                elif pimatrix.status == "N":
+                    status = "Recording2PC"
 
                 print str(num)+".\t"+pimatrix.hostname+"\t"+pimatrix.ip+"\t"+status
                 num+=1
@@ -70,7 +72,6 @@ class deviceManager():
             "shutdown": "T",
             "rec2net": "N",
             "rec2sd": "L",
-            "lvcsr":"S",
             "stop": "I"
             }
         
@@ -99,6 +100,15 @@ class deviceManager():
             while True:
                 try:                
                     pimatrix.tcpConnection.recv(4096)
+                except:
+                    pimatrix.tcpConnection.setblocking(True)
+                    break
+    def clean32768TcpBuffer(self):
+        for pimatrix in self.deviceList:
+            pimatrix.tcpConnection.setblocking(False)
+            while True:
+                try:                
+                    pimatrix.tcpConnection.recv(32768)
                 except:
                     pimatrix.tcpConnection.setblocking(True)
                     break
