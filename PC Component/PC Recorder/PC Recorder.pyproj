@@ -12,6 +12,8 @@
     <OutputPath>.</OutputPath>
     <Name>PC Recorder</Name>
     <RootNamespace>PC Recorder</RootNamespace>
+    <InterpreterId>{2f7fc0e5-370e-4f9e-a6e2-9f116dbff2c9}</InterpreterId>
+    <InterpreterVersion>3.5</InterpreterVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,6 +25,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="PC_Recorder.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="{2f7fc0e5-370e-4f9e-a6e2-9f116dbff2c9}\3.5" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

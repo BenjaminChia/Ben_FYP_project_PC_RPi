@@ -226,7 +226,7 @@ void *udpBroadcastReceiver(void *null) {
 			udpServer.rcvfrom(buffer, remoteIP, remotePort);
 
 			if (!pcConnected && buffer.compare("live long and prosper") == 0) {
-				cout << "Remote PC at " << remoteIP << endl;
+				cout << "Remote PC at " << remoteIP << " connected" << endl;
 				udpServer.sndto("peace and long life", remoteIP, remotePort);
 			}
 
@@ -265,7 +265,7 @@ void *recorder(void* null) {
 	}
 	
 	
-	cout << "------ Recording starting ------" << endl;
+	//cout << "------ Recording starting ------" << endl;
 	pthread_join(workerThread, NULL); 
 	
 
@@ -276,13 +276,13 @@ void *recorder(void* null) {
 	}
 	everloop.Write(&image1d);
 	
-	cout << "------ Recorder ended ------" << endl;
+	//cout << "------ Recorder ended ------" << endl;
 	pthread_exit(NULL);
 
 }
 void *record2Disk(void* null) {
 	
-	
+	cout << "------ Local Recording Starting ------" << endl;
 	int sampling_rate = FLAGS_sampling_frequency;
 	mics.Setup(&bus);
 	mics.SetSamplingRate(sampling_rate);
@@ -293,15 +293,15 @@ void *record2Disk(void* null) {
 	mic_core.Setup(&bus);
 	mics.CalculateDelays(0, 0, 1000, 320 * 1000);
 
-	cout << "Recording to Local SD card" << endl;
+	cout << "\tRecording to Local SD card" << endl;
 
 	int16_t buffer1[mics.SamplingRate() + mics.NumberOfSamples()];
 
 	ofstream os;
 
-	char dateAndTime[16];
+	char dateAndTime[14];
 	struct tm tm;
-
+	int seconds = 0;
 	string filename = "mic_" + std::to_string(mics.SamplingRate()) +
 			"_s16le_beamed.raw";
 	os.open(filename, ofstream::binary);
@@ -309,20 +309,17 @@ void *record2Disk(void* null) {
 	time_t t = time(NULL);
 	tm = *localtime(&t);
 
-	sprintf(dateAndTime, "%d%02d%02d_%02d%02d%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
+	sprintf(dateAndTime, "%02d%02d%02d_%02d%02d%02d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year - 100,
 		tm.tm_hour, tm.tm_min, tm.tm_sec);
 
 	ostringstream filenameStream;
-	filenameStream << "/home/pi/BenRecordings/" << hostname << "_" << dateAndTime << "_8ch.wav";
+	filenameStream << "/home/pi/BenRecordings/" << hostname << "_" << dateAndTime << "_beamed.wav";
 	string filename1 = filenameStream.str();
 	cout << filename1 << endl;
 	uint32_t counter = 0;
 	uint32_t samples = 0;
 	ofstream file(filename1, std::ofstream::binary);
 	
-
-	cout << "------ Recording starting ------" << endl;
-
 
 	struct WaveHeader {
 		//RIFF chunk
@@ -360,7 +357,9 @@ void *record2Disk(void* null) {
 		if (samples >= mics.SamplingRate()) {
 			file.write((const char*)buffer1, samples * sizeof(int16_t));
 			os.write((const char *)buffer1, samples * sizeof(int16_t));
-			samples = 0;
+			samples = 0; 
+			seconds++;
+			cout << "\t  Recording for " << seconds / 60 << " Minutes and " << seconds % 60 << " Seconds...\n " << endl;
 		}
 		//cout << recording << endl;
 	} while (recording);
@@ -371,15 +370,15 @@ void *record2Disk(void* null) {
 	file.seekp(0);
 	file.write((const char*)&header, sizeof(WaveHeader));
 	file.close(); 
-	cout << "------ Recording ended ------" << endl;
-	cout << "Recording saved in $HOME/BenRecordings" << endl;
+	cout << "\n------ Local Recording Ended ------" << endl;
+	cout << "Recording "<< hostname << "_" << dateAndTime << "_beamed.wav" << " saved in $HOME/BenRecordings\n\n" << endl;
 	pthread_exit(NULL);
 
 }
 
 void *record2Remote(void* null)
 {
-	
+	cout << "\n\n------ Stream to PC Starting ------" << endl;
 	int sampling_rate = FLAGS_sampling_frequency;
 	mics.Setup(&bus);
 	mics.SetSamplingRate(sampling_rate);
@@ -389,17 +388,16 @@ void *record2Remote(void* null)
 
 	mic_core.Setup(&bus);
 	mics.CalculateDelays(0, 0, 1000, 320 * 1000);
-
-	cout << "Recording to PC " << endl;
+	int seconds =0;
+	cout << "\tRecording to PC " << endl;
 	uint32_t samples = 0;
-	uint16_t i = 0;
 	int16_t buffer2[mics.SamplingRate() + mics.NumberOfSamples()];
 	if (pcConnected) {
 		syncRecording(NULL);
-		cout << "synced" << endl;
+		cout << "Synced to PC" << endl;
 		
 	}
-	cout << "------ Recording starting ------" << endl;
+	//cout << "------ Recording starting ------" << endl;
 	
 	//cout << recording << endl;
 	while (recording){
@@ -413,6 +411,8 @@ void *record2Remote(void* null)
 			if (samples >= mics.SamplingRate()) {
 				tcpConnection->snd(buffer2, 32768);
 				samples = 0;
+				seconds++;
+				cout << "\t  Streaming for " << seconds/60 << " Minutes and "  << seconds%60 <<" Seconds...\n " << endl;
 			}
 			//cout << recording << "  recording" << endl;
 			
@@ -427,8 +427,8 @@ void *record2Remote(void* null)
 			break;
 		}
 	}
-	cout << "Ending PC Recoding...." << endl;
-	cout << "------ Recording ended ------" << endl;
+	//cout << "\n\tEnding PC Stream" << endl;
+	cout << "\n\n------ Streaming Ended ------\n\n" << endl;
 	pthread_exit(NULL);//terminate itself
 }
 
