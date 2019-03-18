@@ -7,8 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MatrixRpi", "MatrixRpi\Matr
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PC Controller", "PC Component\PC Controller\PC Controller.pyproj", "{10BBC34F-24AA-4858-8B51-06F08757BADA}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PCrecorder", "PythonApplication1\PCrecorder.pyproj", "{D63EA358-F4E1-43D3-9C68-C24F3E90AA03}"
-EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PC Recorder", "PC Recorder\PC Recorder.pyproj", "{8F6EEF86-AE89-4D8E-BCD7-E1AC00B66066}"
 EndProject
 Global
@@ -30,10 +28,6 @@ Global
 		{10BBC34F-24AA-4858-8B51-06F08757BADA}.Debug|ARM.ActiveCfg = Debug|Any CPU
 		{10BBC34F-24AA-4858-8B51-06F08757BADA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10BBC34F-24AA-4858-8B51-06F08757BADA}.Release|ARM.ActiveCfg = Release|Any CPU
-		{D63EA358-F4E1-43D3-9C68-C24F3E90AA03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D63EA358-F4E1-43D3-9C68-C24F3E90AA03}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{D63EA358-F4E1-43D3-9C68-C24F3E90AA03}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D63EA358-F4E1-43D3-9C68-C24F3E90AA03}.Release|ARM.ActiveCfg = Release|Any CPU
 		{8F6EEF86-AE89-4D8E-BCD7-E1AC00B66066}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8F6EEF86-AE89-4D8E-BCD7-E1AC00B66066}.Debug|ARM.ActiveCfg = Debug|Any CPU
 		{8F6EEF86-AE89-4D8E-BCD7-E1AC00B66066}.Release|Any CPU.ActiveCfg = Release|Any CPU
