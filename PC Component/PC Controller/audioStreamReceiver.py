@@ -32,6 +32,5 @@ class RecordingStream(threading.Thread):
         
         out_sound.close()
         printout = "\n\n\t" + self.device.hostname + " streamed for " + str(self.seconds_recorded // 60) + " minutes " + str(self.seconds_recorded % 60) + " seconds\n"
-
         print (printout)
-          
+        print "\tRecording saved in " + filename + "\n"

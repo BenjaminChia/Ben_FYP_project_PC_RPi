@@ -1,14 +1,13 @@
 ﻿  Validating architecture
   Validating sources
-  Copying sources remotely to '192.168.43.229'
+  Copying sources remotely to '192.168.1.224'
   Starting remote build
   Compiling sources:
   main.cpp
-C:\Users\Tan Zong Hong\Source\Projects\BenjaminChia\Ben_FYP_project_PC_RPi\MatrixRpi\main\main.cpp(102,17): warning : converting to non-pointer type ‘char’ from NULL [-Wconversion-null]
-C:\Users\Tan Zong Hong\Source\Projects\BenjaminChia\Ben_FYP_project_PC_RPi\MatrixRpi\main\main.cpp(290,45): warning : conversion to ‘uint16_t {aka short unsigned int}’ from ‘google::int32 {aka int}’ may alter its value [-Wconversion]
-C:\Users\Tan Zong Hong\Source\Projects\BenjaminChia\Ben_FYP_project_PC_RPi\MatrixRpi\main\main.cpp(352,34): warning : conversion to ‘int16_t {aka short int}’ from ‘uint32_t {aka unsigned int}’ may alter its value [-Wconversion]
-C:\Users\Tan Zong Hong\Source\Projects\BenjaminChia\Ben_FYP_project_PC_RPi\MatrixRpi\main\main.cpp(385,45): warning : conversion to ‘uint16_t {aka short unsigned int}’ from ‘google::int32 {aka int}’ may alter its value [-Wconversion]
-C:\Users\Tan Zong Hong\Source\Projects\BenjaminChia\Ben_FYP_project_PC_RPi\MatrixRpi\main\main.cpp(408,35): warning : conversion to ‘int16_t {aka short int}’ from ‘uint32_t {aka unsigned int}’ may alter its value [-Wconversion]
-C:\Users\Tan Zong Hong\Source\Projects\BenjaminChia\Ben_FYP_project_PC_RPi\MatrixRpi\main\main.cpp(443,46): warning : conversion to ‘uint16_t {aka short unsigned int}’ from ‘google::int32 {aka int}’ may alter its value [-Wconversion]
+C:\Users\User\Documents\Visual Studio 2015\Projects\BenProject\MatrixRpi\main\main.cpp(102,17): warning : converting to non-pointer type ‘char’ from NULL [-Wconversion-null]
+C:\Users\User\Documents\Visual Studio 2015\Projects\BenProject\MatrixRpi\main\main.cpp(286,45): warning : conversion to ‘uint16_t {aka short unsigned int}’ from ‘google::int32 {aka int}’ may alter its value [-Wconversion]
+C:\Users\User\Documents\Visual Studio 2015\Projects\BenProject\MatrixRpi\main\main.cpp(346,34): warning : conversion to ‘int16_t {aka short int}’ from ‘uint32_t {aka unsigned int}’ may alter its value [-Wconversion]
+C:\Users\User\Documents\Visual Studio 2015\Projects\BenProject\MatrixRpi\main\main.cpp(378,45): warning : conversion to ‘uint16_t {aka short unsigned int}’ from ‘google::int32 {aka int}’ may alter its value [-Wconversion]
+C:\Users\User\Documents\Visual Studio 2015\Projects\BenProject\MatrixRpi\main\main.cpp(398,35): warning : conversion to ‘int16_t {aka short int}’ from ‘uint32_t {aka unsigned int}’ may alter its value [-Wconversion]
   Linking objects
-  MatrixRpi.vcxproj -> C:\Users\Tan Zong Hong\Source\Projects\BenjaminChia\Ben_FYP_project_PC_RPi\MatrixRpi\bin\ARM\Debug\MatrixRpi.out
+  MatrixRpi.vcxproj -> C:\Users\User\Documents\visual studio 2015\Projects\BenProject\MatrixRpi\bin\ARM\Debug\MatrixRpi.out

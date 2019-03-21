@@ -426,7 +426,6 @@ void *arrivalDirection(void* null) {
 	int sampling_rate = FLAGS_sampling_frequency;
 	hal::MicrophoneCore doa_mic_core(micsx);
 	micsx.SetSamplingRate(sampling_rate);
-	micsx.SetGain(-1);
 	doa_mic_core.Setup(&bus);
 
 	hal::Everloop everloop;
