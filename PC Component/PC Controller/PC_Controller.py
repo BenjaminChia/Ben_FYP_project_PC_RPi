@@ -2,7 +2,7 @@ import threading
 import audioStreamReceiver
 import pimatrix
 import time
-#import transcriptReceiver
+
 from timeServer import TimeServer
 
 
@@ -26,7 +26,8 @@ def printMenu():
             print "\t5. Stop all devices' current task"
         print "\t" + '-' * 30
         print "\t6. Disconnect from all devices"
-        print "\t7. Shutdown all devices"
+        if not deviceMan.deviceBusy: 
+            print "\t7. Shutdown all devices"
     print "\t0. Terminate"
     print "\n\t" + '=' * 30
 
