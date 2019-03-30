@@ -67,7 +67,7 @@ while t:
                     # soundfile expects an int, sounddevice provides a float:
                     args.samplerate = 16000 #int(device_info['default_samplerate'])
                 
-                print("\n\n(Up to 3 devices)")
+                print("\n\n(Up to 5 devices)")
                 rawnumdevice = input("Num of devices :")
                 numdevice = int(rawnumdevice)
                 chosendevice = [None] * numdevice
@@ -85,7 +85,7 @@ while t:
                     if status:
                         print(status, file=sys.stderr)
                     q.put(indata.copy())
-
+                
                 if numdevice == 1:
                     with sf.SoundFile(filename[0], mode='x', samplerate=args.samplerate,
                                       channels=args.channels, subtype=args.subtype) as file:
@@ -138,9 +138,68 @@ while t:
                                                 file.write(q.get())
                                                 file1.write(q.get())
                                                 file2.write(q.get())
+                elif numdevice == 4:
+                    with sf.SoundFile(filename[0], mode='x', samplerate=args.samplerate,
+                                      channels=args.channels, subtype=args.subtype) as file:
+                        with sf.SoundFile(filename[1], mode='x', samplerate=args.samplerate,
+                                          channels=args.channels, subtype=args.subtype) as file1:
+                            with sf.SoundFile(filename[2], mode='x', samplerate=args.samplerate,
+                                              channels=args.channels, subtype=args.subtype) as file2:
+                                with sf.SoundFile(filename[3], mode='x', samplerate=args.samplerate,
+                                                 channels=args.channels, subtype=args.subtype) as file3:
+                                    with sd.InputStream(samplerate=args.samplerate, device=chosendevice[0],
+                                                        channels=args.channels, callback=callback):
+                                        with sd.InputStream(samplerate=args.samplerate, device=chosendevice[1],
+                                                            channels=args.channels, callback=callback):
+                                            with sd.InputStream(samplerate=args.samplerate, device=chosendevice[2],
+                                                                channels=args.channels, callback=callback):
+                                                 with sd.InputStream(samplerate=args.samplerate, device=chosendevice[3],
+                                                                channels=args.channels, callback=callback):
+                                                    print("\n")
+                                                    print('#' * 80)
+                                                    print('\t\tCtrl+C to stop the recording')
+                                                    print('#' * 80)
+
+                                                    while True:
+                                                        file.write(q.get())
+                                                        file1.write(q.get())
+                                                        file2.write(q.get())
+                                                        file3.write(q.get())
+                elif numdevice == 5:
+                    with sf.SoundFile(filename[0], mode='x', samplerate=args.samplerate,
+                                      channels=args.channels, subtype=args.subtype) as file:
+                        with sf.SoundFile(filename[1], mode='x', samplerate=args.samplerate,
+                                         channels=args.channels, subtype=args.subtype) as file1:
+                            with sf.SoundFile(filename[2], mode='x', samplerate=args.samplerate,
+                                          channels=args.channels, subtype=args.subtype) as file2:
+                                with sf.SoundFile(filename[3], mode='x', samplerate=args.samplerate,
+                                           channels=args.channels, subtype=args.subtype) as file3:
+                                    with sf.SoundFile(filename[4], mode='x', samplerate=args.samplerate,
+                                                channels=args.channels, subtype=args.subtype) as file4:
+                                        with sd.InputStream(samplerate=args.samplerate, device=chosendevice[0],
+                                                  channels=args.channels, callback=callback):
+                                            with sd.InputStream(samplerate=args.samplerate, device=chosendevice[1],
+                                                                channels=args.channels, callback=callback):
+                                                with sd.InputStream(samplerate=args.samplerate, device=chosendevice[2],
+                                                                    channels=args.channels, callback=callback):
+                                                     with sd.InputStream(samplerate=args.samplerate, device=chosendevice[3],
+                                                                    channels=args.channels, callback=callback):
+                                                        with sd.InputStream(samplerate=args.samplerate, device=chosendevice[4],
+                                                                    channels=args.channels, callback=callback):
+                                                            print("\n")
+                                                            print('#' * 80)
+                                                            print('\t\tCtrl+C to stop the recording')
+                                                            print('#' * 80)
+
+                                                            while True:
+                                                                file.write(q.get())
+                                                                file1.write(q.get())
+                                                                file2.write(q.get())
+                                                                file3.write(q.get())
+                                                                file4.write(q.get())
 
                 else:
-                    print("\tError... Incorrect Number\n\tPlease Select 1-3 Device")
+                    print("\tError... Incorrect Number\n\tPlease Select 1-5 Device")
             except KeyboardInterrupt:
                 for i in range(numdevice):
                     print("\nDevice ", i + 1)
