@@ -19,10 +19,9 @@ class RecordingStream(threading.Thread):
         print '=' * 50
         filename = ("Recordings/" + self.device.hostname + "_" + self.dateAndTime + "_beamed.wav")
         out_sound = wave.open(filename, 'w')
-        # out_sound = wave.=open(filename,'wb+')
         # (num of channels, sampling width in bytes, sampling rate, num of frames, compression type, compression name)
         out_sound.setparams((1, 2, 16000, 1, 'NONE', 'not compressed'))
-        #expected_bytes = 32768 # 1 second
+        #expected_bytes/second = 32768 
         while self.continue_recording:
             out_sound.writeframes(self.device.tcpConnection.recv(32768))
             self.seconds_recorded +=1

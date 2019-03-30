@@ -22,7 +22,6 @@ class deviceManager():
         udpSocket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
         udpSocket.sendto('live long and prosper',('255.255.255.255',8001))
      
-    
         while True:
             try:
                 udpSocket.settimeout(1)
@@ -87,7 +86,7 @@ class deviceManager():
                 print "\n\t{0}({1}) timed out!".format(pimatrix.hostname,pimatrix.ip)
                 self.deviceList.remove(pimatrix)
                 self.numDevices -= 1
-    
+
     def disconnectAll(self):
         for pimatrix in self.deviceList:
             pimatrix.tcpConnection.close()
@@ -103,7 +102,7 @@ class deviceManager():
                 except:
                     pimatrix.tcpConnection.setblocking(True)
                     break
-   
+
     def clean32768TcpBuffer(self):
         for pimatrix in self.deviceList:
             pimatrix.tcpConnection.setblocking(False)
