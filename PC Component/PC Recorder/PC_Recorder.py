@@ -42,15 +42,14 @@ def printMenu():
     print("\n1. List Devices")
     print("\n2. Record Devices")
     print("\n3. Terminate\n")
-   
-t = True 
+
+t = True
 
 while t:
     try:
         import sounddevice as sd
         import soundfile as sf
         import numpy  # Make sure NumPy is loaded before it is used in the callback
-
         assert numpy  # avoid "imported but unused" message (W0611)
         printMenu()
         rawChoice = input("\nChoice: ")
@@ -73,6 +72,8 @@ while t:
                 chosendevice = [None] * numdevice
                 filename = [None] * numdevice
                 for i in range(numdevice):
+                    if numdevice < 1 or numdevice > 5:
+                        break
                     print("Device ", i + 1)
                     rawchosendevice = input("\nChoose your device: ")
                     chosendevice[i] = int(rawchosendevice)
@@ -85,7 +86,7 @@ while t:
                     if status:
                         print(status, file=sys.stderr)
                     q.put(indata.copy())
-                
+                                
                 if numdevice == 1:
                     with sf.SoundFile(filename[0], mode='x', samplerate=args.samplerate,
                                       channels=args.channels, subtype=args.subtype) as file:
@@ -98,7 +99,6 @@ while t:
 
                             while True:
                                 file.write(q.get())
-
                 elif numdevice == 2:
                     with sf.SoundFile(filename[0], mode='x', samplerate=args.samplerate,
                                       channels=args.channels, subtype=args.subtype) as file:
@@ -197,7 +197,6 @@ while t:
                                                                 file2.write(q.get())
                                                                 file3.write(q.get())
                                                                 file4.write(q.get())
-
                 else:
                     print("\tError... Incorrect Number\n\tPlease Select 1-5 Device")
             except KeyboardInterrupt:
