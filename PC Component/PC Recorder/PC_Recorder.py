@@ -36,9 +36,9 @@ args = parser.parse_args()
 
 def printMenu():
     print("\n")
-    print('-' * 30)
-    print("\tPC Recorder")
-    print('-' * 30)
+    print('-' * 35)
+    print("\tPC Recording Station")
+    print('-' * 35)
     print("\n1. List Devices")
     print("\n2. Record Devices")
     print("\n3. Terminate\n")
