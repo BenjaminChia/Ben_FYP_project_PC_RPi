@@ -2,6 +2,6 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <DebuggerFlavor>LinuxDebugger</DebuggerFlavor>
-    <RemoteTarget>1608288436;192.168.43.229 (username=pi, port=22, authentication=Password)</RemoteTarget>
+    <RemoteTarget>1985510261;192.168.1.224 (username=pi, port=22, authentication=Password)</RemoteTarget>
   </PropertyGroup>
 </Project>

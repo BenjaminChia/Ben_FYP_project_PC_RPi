@@ -4,10 +4,10 @@ import struct
 
 class device():
     def __init__(self,addr):
-        self.hostname = "";
-        self.status = "";
+        self.hostname = ""
+        self.status = ""
         self.ip = addr
-        self.tcpConnection = socket(AF_INET, SOCK_STREAM);
+        self.tcpConnection = socket(AF_INET, SOCK_STREAM)
 
 class deviceManager():
     def __init__(self):
@@ -18,11 +18,10 @@ class deviceManager():
     def discoverDevices(self):
         newDevices = []
 
-        udpSocket=socket(AF_INET, SOCK_DGRAM)
+        udpSocket = socket(AF_INET, SOCK_DGRAM)
         udpSocket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
         udpSocket.sendto('live long and prosper',('255.255.255.255',8001))
      
-    
         while True:
             try:
                 udpSocket.settimeout(1)
@@ -39,8 +38,8 @@ class deviceManager():
             #pimatrix.tcpConnection.send(struct.pack("I"))
             pimatrix.tcpConnection.send(struct.pack("I", int(time.time())))
 
-            pimatrix.hostname=str(data[1:]).rstrip(" \t\r\n\0")
-            pimatrix.status=str(data[0])
+            pimatrix.hostname = str(data[1:]).rstrip(" \t\r\n\0")
+            pimatrix.status = str(data[0])
             if not pimatrix.status == 'I':
                 self.deviceBusy = True
         
@@ -48,7 +47,7 @@ class deviceManager():
         self.numDevices += len(newDevices)
 
     def tabulateDevice(self):
-        if self.numDevices>0:
+        if self.numDevices > 0:
             num = 1
             print "\n\t#\tHostname\tIP\t\tStatus"
             print "\t-\t--------\t--\t\t------"
@@ -61,7 +60,7 @@ class deviceManager():
                 elif pimatrix.status == "N":
                     status = "Recording2PC"
 
-                print "\t"+str(num)+".\t"+pimatrix.hostname+"\t"+pimatrix.ip+"\t"+status
+                print "\t" + str(num) + ".\t" + pimatrix.hostname + "\t" + pimatrix.ip + "\t" + status
                 num+=1
         else:
             print "\tNo devices found"
@@ -80,14 +79,14 @@ class deviceManager():
         
         for pimatrix in self.deviceList:
             try:
-                pimatrix.tcpConnection.send(commandKeyword[command]+para)
+                pimatrix.tcpConnection.send(commandKeyword[command] + para)
                 pimatrix.status = status
 
             except:
                 print "\n\t{0}({1}) timed out!".format(pimatrix.hostname,pimatrix.ip)
                 self.deviceList.remove(pimatrix)
                 self.numDevices -= 1
-    
+
     def disconnectAll(self):
         for pimatrix in self.deviceList:
             pimatrix.tcpConnection.close()
@@ -103,7 +102,7 @@ class deviceManager():
                 except:
                     pimatrix.tcpConnection.setblocking(True)
                     break
-   
+
     def clean32768TcpBuffer(self):
         for pimatrix in self.deviceList:
             pimatrix.tcpConnection.setblocking(False)

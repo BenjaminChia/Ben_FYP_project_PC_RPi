@@ -17,8 +17,7 @@ class workThread(threading.Thread):
                 rxTimestamp = time.clock()
                 packet = struct.pack("II",
                                      int(rxTimestamp),
-                                     int(math.modf(rxTimestamp)[0]*1000000),
-                                     )
+                                     int(math.modf(rxTimestamp)[0] * 1000000),)
                 self.socket.sendto(packet, addr)
                 #print rxTimestamp
             except socket.error:
@@ -28,11 +27,8 @@ class TimeServer():
     def  __init__(self):
         self.soc = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
         self.soc.bind(("0.0.0.0",1230))
-
         self.workThread = workThread(self.soc)
         time.clock()
-
-        #print "Windows Perf Timer :1230"
         self.workThread.start()
 
     def stop(self):
@@ -40,4 +36,3 @@ class TimeServer():
         self.soc.sendto("stop",("localhost",1230))
         self.workThread.join()
         self.soc.close()
-        
