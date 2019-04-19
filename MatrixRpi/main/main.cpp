@@ -1,8 +1,3 @@
-/*
-* Copyright 2016 <Admobilize>
-* All rights reserved.
-*/
-
 #include <fftw3.h>
 #include <gflags/gflags.h>
 #include <stdint.h>
@@ -55,7 +50,6 @@ char sysInfo[COMMAND_LENGTH + HOST_NAME_LENGTH];
 char commandArgument;
 char* status = &sysInfo[0];
 char* hostname = &sysInfo[1];
-int SuspendFlag = 0;
 
 int16_t buffer[BUFFER_SAMPLES_PER_CHANNEL][STREAMING_CHANNELS];
 
@@ -126,6 +120,7 @@ int main(int argc, char *agrv[]) {
 				}
 				everloop.Write(&image1d);
 			}
+
 			tcpConnection->snd(sysInfo, COMMAND_LENGTH + HOST_NAME_LENGTH);
 
 			pthread_t recorderThread;
@@ -238,19 +233,6 @@ void *udpBroadcastReceiver(void *null) {
 	}
 
 }
-
-void syncRecording(void *null) {
-	struct syncPacket {
-		uint32_t rxTimeInt;
-		uint32_t rxTimeFrac;
-	} packet;
-	string ip;
-	string port;
-	libsocket::inet_dgram_client udp(LIBSOCKET_IPv4);
-	udp.sndto("N", tcpConnection->gethost(), "1230");
-	udp.rcvfrom((void*)&packet, 8, ip, port);
-}
-
 void *recorder(void* null) {
 	hal::Everloop everloop;
 	hal::EverloopImage image1d(bus.MatrixLeds());
@@ -319,29 +301,28 @@ void *record2Disk(void* null) {
 	struct WaveHeader {
 		//RIFF chunk
 		char RIFF[4] = { 'R', 'I', 'F', 'F' };
-		int overallSize;						// overall size of file in bytes
+		int overallSize;							// overall size of file in bytes
 		char WAVE[4] = { 'W', 'A', 'V', 'E' };		// WAVE string
-
 													//fmt subchunk
 		char fmt[4] = { 'f', 'm', 't', ' ' };		// fmt string with trailing null char
-		int fmtLength = 16;					// length of the format data
+		int fmtLength = 16;							// length of the format data
 		short int  audioFormat = 1;					// format type. 1-PCM, 3- IEEE float, 6 - 8bit A law, 7 - 8bit mu law
 		short int  numChannels = 1;					// no.of channels
-		int sampleRate = 16000;				// sampling rate (blocks per second)
-		int byteRate = sampleRate * 2;					// SampleRate * NumChannels * BitsPerSample/8
+		int sampleRate = 16000;						// sampling rate (blocks per second)
+		int byteRate = sampleRate * 2;				// SampleRate * NumChannels * BitsPerSample/8
 		short int blockAlign = 2;					// NumChannels * BitsPerSample/8
 		short int bitsPerSample = 16;				// bits per sample, 8- 8bits, 16- 16 bits etc
-
 													//data subchunk
 		char data[4] = { 'd', 'a', 't', 'a' };		// DATA string or FLLR string
-		int dataSize;							// NumSamples * NumChannels * BitsPerSample/8 - size of the next chunk that will be read
+		int dataSize;								// NumSamples * NumChannels * BitsPerSample/8 - size of the next chunk that will be read
 	} header;
+
 	header.dataSize = 0;
 	header.overallSize = 0;
 	file.write((const char*)&header, sizeof(WaveHeader));
 
 	do {
-		mics.Read(); /* Reading 8-mics buffer from de FPGA */
+		mics.Read();												 /* Reading 8-mics buffer from FPGA */
 		for (uint32_t s = 0; s < mics.NumberOfSamples(); s++) {
 			buffer1[samples] = mics.Beam(s);
 			samples++;
@@ -368,7 +349,6 @@ void *record2Disk(void* null) {
 	pthread_exit(NULL);
 
 }
-
 void *record2Remote(void* null)
 {
 	cout << "\n\n------ Stream to PC Starting ------" << endl;
@@ -418,7 +398,6 @@ void *record2Remote(void* null)
 	cout << "\n\n------ Streaming Ended ------\n\n" << endl;
 	pthread_exit(NULL);//terminate itself
 }
-
 void *arrivalDirection(void* null) {
 	//DOA setup
 	hal::MicrophoneArray micsx;
@@ -457,4 +436,16 @@ void *arrivalDirection(void* null) {
 		}//DOA part end
 	}
 	pthread_exit(NULL);
+}
+
+void syncRecording(void *null) {
+	struct syncPacket {
+		uint32_t rxTimeInt;
+		uint32_t rxTimeFrac;
+	} packet;
+	string ip;
+	string port;
+	libsocket::inet_dgram_client udp(LIBSOCKET_IPv4);
+	udp.sndto("N", tcpConnection->gethost(), "1230");
+	udp.rcvfrom((void*)&packet, 8, ip, port);
 }
